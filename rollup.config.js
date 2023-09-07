@@ -24,7 +24,7 @@ export default [
                 target: 'es2015'
             })
         ],
-        external: ['@vue/runtime-core']
+        external: ['vue']
     },
     {
         input: 'src/index.ts',
