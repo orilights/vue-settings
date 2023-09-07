@@ -1,4 +1,4 @@
-import { watch, Ref } from "vue"
+import { watch, Ref, WatchStopHandle } from "vue"
 
 export enum SettingType {
     Str = 'str',
@@ -9,6 +9,9 @@ export enum SettingType {
 
 export class Settings {
     abbr: string
+    registered: {
+        [key: string]: WatchStopHandle
+    } = {}
     constructor(appAbbr: string) {
         this.abbr = appAbbr
     }
@@ -19,8 +22,13 @@ export class Settings {
      * @param settingKey -  key of the setting
      * @param refObj - ref object
      * @param settingType - type of the setting
+     * @returns void
+     * 
+     * @throws Error if setting already registered
      */
     public register(settingKey: string, refObj: Ref<any>, settingType: SettingType = SettingType.Str) {
+        if (this.registered[settingKey] !== undefined)
+            throw new Error(`Setting ${settingKey} already registered`)
         const value = this.get(settingKey, settingType, null)
         if (value == null) {
             this.set(settingKey, refObj.value)
@@ -28,11 +36,28 @@ export class Settings {
         else {
             refObj.value = value
         }
-        watch(refObj, (newVal:any) => {
-            this.set(settingKey, newVal)
-        },{
-            deep: true
-        })
+        this.registered[settingKey] =
+            watch(refObj, (newVal: any) => {
+                this.set(settingKey, newVal)
+            }, {
+                deep: settingType === SettingType.Json
+            })
+    }
+
+    /**
+     * unregister a setting
+     * 
+     * @param settingKey - key of the setting
+     * @returns void
+     * 
+     * @throws Error if setting not registered
+     * 
+     */
+    public unregister(settingKey: string) {
+        if (this.registered[settingKey] === undefined)
+            throw new Error(`Setting ${settingKey} not registered`)
+        this.registered[settingKey]()
+        delete this.registered[settingKey]
     }
 
     set(settingKey: string, value: any) {
