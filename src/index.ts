@@ -8,12 +8,15 @@ export enum SettingType {
 }
 
 export class Settings {
-    abbr: string
-    registered: {
+    private abbr: string | undefined
+    private registered: {
         [key: string]: WatchStopHandle
     } = {}
-    constructor(appAbbr: string) {
-        this.abbr = appAbbr
+    private settingPrefix = 'setting'
+    constructor(abbr: string | undefined = undefined) {
+        this.abbr = abbr
+        if (this.abbr !== undefined)
+            this.settingPrefix = `${this.abbr}-setting`
     }
 
     /**
@@ -80,7 +83,7 @@ export class Settings {
         this.unregisterAll()
         // @ts-ignore
         Object.keys(localStorage).map((key) => {
-            if (key.startsWith(`${this.abbr}-setting-`))
+            if (key.startsWith(this.settingPrefix))
                 // @ts-ignore
                 localStorage.removeItem(key)
         })
@@ -90,13 +93,14 @@ export class Settings {
         let data = value
         if (typeof value === 'object')
             data = JSON.stringify(value)
+
         // @ts-ignore
-        localStorage.setItem(`${this.abbr}-setting-${settingKey}`, String(data))
+        localStorage.setItem(`${this.settingPrefix}-${settingKey}`, String(data))
     }
 
     get(settingKey: string, settingType: SettingType, defaultValue: any): any {
         // @ts-ignore
-        const value = localStorage.getItem(`${this.abbr}-setting-${settingKey}`)
+        const value = localStorage.getItem(`${this.settingPrefix}-${settingKey}`)
         if (value === null)
             return defaultValue
 
