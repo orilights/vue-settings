@@ -24,12 +24,20 @@ export default [
                 target: 'es2015'
             })
         ],
+        external: ['@vue/runtime-core']
     },
     {
         input: 'src/index.ts',
         output: {
             file: 'index.d.ts',
+            format: 'es'
         },
-        plugins: [dts()]
+        plugins: [
+            dts({
+                compilerOptions: {
+                    preserveSymlinks: false
+                }
+            })
+        ]
     }
 ]

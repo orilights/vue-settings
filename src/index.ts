@@ -1,4 +1,4 @@
-import { watch, Ref } from "@vue/runtime-core"
+import { watch, Ref } from "vue"
 
 export enum SettingType {
     Str = 'str',

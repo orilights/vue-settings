@@ -6,30 +6,33 @@
     "vue",
     "settings"
   ],
-  "license": "MIT",
-  "author": "OriLight",
-  "type": "module",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/orilights/vue-settings.git"
   },
-  "types": "index.d.ts",
-  "files": [
-    "dist",
-    "index.d.ts"
-  ],
-  "exports":{
+  "license": "MIT",
+  "author": "OriLight",
+  "type": "module",
+  "exports": {
     ".": {
       "types": "./index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "index.d.ts",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
   "scripts": {
     "build": "rollup -c",
     "release": "npm run build && npm publish"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
@@ -40,7 +43,6 @@
     "rollup": "^3.29.0",
     "rollup-plugin-dts": "^6.0.1",
     "rollup-plugin-esbuild": "^5.0.0",
-    "typescript": "^5.1.6",
-    "vue": "^3.3.4"
+    "typescript": "^5.1.6"
   }
 }
