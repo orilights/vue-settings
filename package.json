@@ -20,9 +20,16 @@
     "dist",
     "index.d.ts"
   ],
+  "exports":{
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release": "npm run build && npm publish"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
