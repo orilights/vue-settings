@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "release": "npm run build && npm publish"
+    "release": "npm run build && npm publish --registry=https://registry.npmjs.org/ --access public"
   },
   "dependencies": {
     "vue": "^3.3.4"
