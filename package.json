@@ -1,6 +1,6 @@
 {
   "name": "@orilight/vue-settings",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "LocalStorage wrapper for storing vue ref objects.",
   "keywords": [
     "vue",
