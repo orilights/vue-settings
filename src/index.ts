@@ -14,7 +14,11 @@ export class Settings {
     }
 
     /**
-     * register
+     * register a ref object as setting
+     * 
+     * @param settingKey -  key of the setting
+     * @param refObj - ref object
+     * @param settingType - type of the setting
      */
     public register(settingKey: string, refObj: Ref<any>, settingType: SettingType = SettingType.Str) {
         const value = this.get(settingKey, settingType, null)
