@@ -14,9 +14,9 @@ export class Settings {
     }
 
     /**
-     * registry
+     * register
      */
-    public registry(settingKey: string, refObj: Ref<any>, settingType: SettingType = SettingType.Str) {
+    public register(settingKey: string, refObj: Ref<any>, settingType: SettingType = SettingType.Str) {
         const value = this.get(settingKey, settingType, null)
         if (value == null) {
             this.set(settingKey, refObj.value)
