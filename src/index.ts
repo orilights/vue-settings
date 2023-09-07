@@ -51,13 +51,39 @@ export class Settings {
      * @returns void
      * 
      * @throws Error if setting not registered
-     * 
      */
     public unregister(settingKey: string) {
         if (this.registered[settingKey] === undefined)
             throw new Error(`Setting ${settingKey} not registered`)
         this.registered[settingKey]()
         delete this.registered[settingKey]
+    }
+
+
+    /**
+     * unregister all settings
+     * 
+     * @returns void
+     */
+    public unregisterAll() {
+        Object.keys(this.registered).map((key) => {
+            this.unregister(key)
+        })
+    }
+
+    /**
+     * clear all settings in localStorage
+     * 
+     * @returns void
+     */
+    public clear() {
+        this.unregisterAll()
+        // @ts-ignore
+        Object.keys(localStorage).map((key) => {
+            if (key.startsWith(`${this.abbr}-setting-`))
+                // @ts-ignore
+                localStorage.removeItem(key)
+        })
     }
 
     set(settingKey: string, value: any) {
