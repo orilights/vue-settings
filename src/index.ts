@@ -30,6 +30,8 @@ export class Settings {
         }
         watch(refObj, (newVal:any) => {
             this.set(settingKey, newVal)
+        },{
+            deep: true
         })
     }
 
