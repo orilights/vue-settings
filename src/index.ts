@@ -7,6 +7,10 @@ export enum SettingType {
     Bool = 'bool',
 }
 
+interface SettingOption {
+    deep?: boolean
+}
+
 export class Settings {
     private abbr: string | undefined
     private registered: {
@@ -29,7 +33,11 @@ export class Settings {
      * 
      * @throws Error if setting already registered
      */
-    public register(settingKey: string, refObj: Ref<any>, settingType: SettingType = SettingType.Str) {
+    public register(settingKey: string,
+        refObj: Ref<any>,
+        settingType: SettingType = SettingType.Str,
+        option: SettingOption = {}
+    ) {
         if (this.registered[settingKey] !== undefined)
             throw new Error(`Setting ${settingKey} already registered`)
         const value = this.get(settingKey, settingType, null)
@@ -37,7 +45,11 @@ export class Settings {
             this.set(settingKey, refObj.value)
         }
         else {
-            refObj.value = value
+            if (option.deep && settingType === SettingType.Json) {
+                refObj.value = this.deepMergeObject(refObj.value, value)
+            } else {
+                refObj.value = value
+            }
         }
         this.registered[settingKey] =
             watch(refObj, (newVal: any) => {
@@ -116,4 +128,17 @@ export class Settings {
         return value
     }
 
+    deepMergeObject(obj1: any, obj2: any) {
+        const result = Object.assign({}, obj1);
+        for (const key of Object.keys(obj2)) {
+            if (obj1.hasOwnProperty(key)) {
+                if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+                    result[key] = this.deepMergeObject(obj1[key], obj2[key]);
+                } else if (typeof obj1[key] !== 'object' && typeof obj2[key] !== 'object') {
+                    result[key] = obj2[key]
+                }
+            }
+        }
+        return result;
+    }
 }
