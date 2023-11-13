@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "test": "vitest",
     "release": "npm run build && npm publish --registry=https://registry.npmjs.org/ --access public"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
     "rollup": "^3.29.0",
     "rollup-plugin-dts": "^6.0.1",
     "rollup-plugin-esbuild": "^5.0.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.6"
   }
 }
