@@ -27,52 +27,53 @@ export class Settings {
     /**
      * register a ref object as setting
      * 
-     * @param settingKey -  key of the setting
+     * @param key -  key of the setting
      * @param refObj - ref object
-     * @param settingType - type of the setting
+     * @param type - type of the setting
      * @returns void
      * 
      * @throws Error if setting already registered
      */
-    public register(settingKey: string,
+    public register(
+        key: string,
         refObj: Ref<any>,
-        settingType: SettingType = SettingType.Str,
+        type: SettingType = SettingType.Str,
         option: SettingOption = {}
     ) {
-        if (this.registered[settingKey] !== undefined)
-            throw new Error(`Setting ${settingKey} already registered`)
-        const value = this.get(settingKey, settingType, null)
+        if (this.registered[key] !== undefined)
+            throw new Error(`Setting ${key} already registered`)
+        const value = this.get(key, type, null)
         if (value == null) {
-            this.set(settingKey, refObj.value)
+            this.set(key, refObj.value)
         }
         else {
-            if (option.deepMerge && settingType === SettingType.Json) {
+            if (option.deepMerge && type === SettingType.Json) {
                 refObj.value = Settings.deepMergeObject(refObj.value, value)
             } else {
                 refObj.value = value
             }
         }
-        this.registered[settingKey] =
+        this.registered[key] =
             watch(refObj, (newVal: any) => {
-                this.set(settingKey, newVal)
+                this.set(key, newVal)
             }, {
-                deep: settingType === SettingType.Json
+                deep: type === SettingType.Json
             })
     }
 
     /**
      * unregister a setting
      * 
-     * @param settingKey - key of the setting
+     * @param key - key of the setting
      * @returns void
      * 
      * @throws Error if setting not registered
      */
-    public unregister(settingKey: string) {
-        if (this.registered[settingKey] === undefined)
-            throw new Error(`Setting ${settingKey} not registered`)
-        this.registered[settingKey]()
-        delete this.registered[settingKey]
+    public unregister(key: string) {
+        if (this.registered[key] === undefined)
+            throw new Error(`Setting ${key} not registered`)
+        this.registered[key]()
+        delete this.registered[key]
     }
 
 
@@ -102,28 +103,28 @@ export class Settings {
         })
     }
 
-    set(settingKey: string, value: any) {
+    set(key: string, value: any) {
         let data = value
         if (typeof value === 'object')
             data = JSON.stringify(value)
 
         // @ts-ignore
-        localStorage.setItem(`${this.settingPrefix}-${settingKey}`, String(data))
+        localStorage.setItem(`${this.settingPrefix}-${key}`, String(data))
     }
 
-    get(settingKey: string, settingType: SettingType, defaultValue: any): any {
+    get(key: string, type: SettingType, defaultValue: any): any {
         // @ts-ignore
-        const value = localStorage.getItem(`${this.settingPrefix}-${settingKey}`)
+        const value = localStorage.getItem(`${this.settingPrefix}-${key}`)
         if (value === null)
             return defaultValue
 
-        if (settingType === SettingType.Json)
+        if (type === SettingType.Json)
             return JSON.parse(value)
 
-        if (settingType === SettingType.Number)
+        if (type === SettingType.Number)
             return Number(value)
 
-        if (settingType === SettingType.Bool)
+        if (type === SettingType.Bool)
             return value === 'true'
 
         return value
