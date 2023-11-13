@@ -3,12 +3,13 @@ import { watch, Ref, WatchStopHandle } from "vue"
 export enum SettingType {
     Str = 'str',
     Json = 'json',
+    Object = 'json',
     Number = 'number',
     Bool = 'bool',
 }
 
 interface SettingOption {
-    deep?: boolean
+    deepMerge?: boolean
 }
 
 export class Settings {
@@ -45,8 +46,8 @@ export class Settings {
             this.set(settingKey, refObj.value)
         }
         else {
-            if (option.deep && settingType === SettingType.Json) {
-                refObj.value = this.deepMergeObject(refObj.value, value)
+            if (option.deepMerge && settingType === SettingType.Json) {
+                refObj.value = Settings.deepMergeObject(refObj.value, value)
             } else {
                 refObj.value = value
             }
@@ -128,7 +129,7 @@ export class Settings {
         return value
     }
 
-    deepMergeObject(obj1: any, obj2: any) {
+    static deepMergeObject(obj1: any, obj2: any) {
         const result = Object.assign({}, obj1);
         for (const key of Object.keys(obj2)) {
             if (obj1.hasOwnProperty(key)) {
